@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Здесь вы можете изменить название вкладки в браузере -->
+    <title>Отзовик</title>
+    <style>
+        /* Здесь вы можете изменить шрифт сайта (подключен от Google) */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+        /* Здесь вы можете изменить основные цвета светлой темы */
+        :root {
+            --primary: #4F46E5; /* Главный цвет (синий) */
+            --primary-hover: #4338CA; /* Цвет при наведении */
+            --bg-color: #F3F4F6; /* Цвет фона сайта */
+            --card-bg: #FFFFFF; /* Цвет карточек */
+            --text-main: #1F2937; /* Цвет главного текста */
+            --text-muted: #6B7280; /* Цвет второстепенного текста */
+            --border-color: #D1D5DB; /* Цвет границ */
+            --header-bg: #FFFFFF; /* Цвет шапки */
+            --star-active: #FBBF24; /* Цвет заполненной звезды */
+            --star-hover: #FDE68A; /* Цвет звезды при наведении */
+            --star-empty: #E5E7EB; /* Цвет пустой звезды */
+            --input-bg: #FFFFFF; /* Фон полей ввода */
+            --btn-gray: #E5E7EB; /* Фон серых кнопок */
+            --btn-gray-hover: #D1D5DB; /* Фон серых кнопок при наведении */
+        }
+
+        /* Здесь вы можете изменить цвета темной темы */
+        body.dark-mode {
+            --bg-color: #111827;
+            --card-bg: #1F2937;
+            --text-main: #F9FAFB;
+            --text-muted: #9CA3AF;
+            --border-color: #374151;
+            --header-bg: #1F2937;
+            --star-empty: #4B5563;
+            --input-bg: #374151;
+            --btn-gray: #374151;
+            --btn-gray-hover: #4B5563;
+        }
+
+        /* Базовые настройки (лучше не трогать) */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        header {
+            background-color: var(--header-bg);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            transition: background-color 0.3s;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 70px;
+            gap: 15px;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        .search-bar {
+            display: flex;
+            flex: 1;
+            max-width: 500px;
+        }
+
+        .search-bar input {
+            width: 100%;
+            padding: 10px 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px 0 0 8px;
+            outline: none;
+            background-color: var(--input-bg);
+            color: var(--text-main);
+            transition: 0.2s;
+        }
+
+        .search-bar input:focus { border-color: var(--primary); }
+
+        .search-bar button, .btn {
+            padding: 10px 20px;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+            transition: 0.2s;
+        }
+
+        .search-bar button { border-radius: 0 8px 8px 0; }
+        .btn { border-radius: 8px; }
+        .btn:hover, .search-bar button:hover { background-color: var(--primary-hover); }
+
+        .header-actions { display: flex; align-items: center; gap: 10px; }
+
+        .theme-toggle {
+            width: 40px; height: 40px;
+            border-radius: 50%; border: none;
+            background-color: var(--btn-gray);
+            color: var(--text-main);
+            font-size: 20px; cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            transition: 0.3s;
+        }
+
+        .theme-toggle:hover {
+            background-color: var(--btn-gray-hover);
+            transform: scale(1.05);
+        }
+
+        /* Здесь вы можете изменить градиент и отступы главного баннера */
+        .hero {
+            text-align: center;
+            padding: 60px 20px;
+            background: linear-gradient(135deg, #4F46E5 0%, #7C3AED 100%);
+            color: white;
+        }
+
+        .hero h1 { font-size: 36px; margin-bottom: 15px; }
+        .hero p { font-size: 18px; opacity: 0.9; }
+
+        .categories {
+            display: flex; justify-content: center; gap: 15px;
+            padding: 30px 20px; flex-wrap: wrap;
+        }
+
+        .category-tag {
+            background-color: var(--card-bg); padding: 8px 16px;
+            border-radius: 20px; font-size: 14px; font-weight: 500;
+            cursor: pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            transition: 0.2s; border: 1px solid transparent; color: var(--text-main);
+        }
+
+        .category-tag:hover {
+            border-color: var(--primary); color: var(--primary);
+            transform: translateY(-2px);
+        }
+
+        .reviews-section { padding: 10px 0 60px; flex: 1; }
+
+        .tools-bar {
+            display: flex; justify-content: space-between; align-items: center;
+            background-color: var(--card-bg); padding: 15px 20px;
+            border-radius: 12px; margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05); flex-wrap: wrap; gap: 15px;
+        }
+
+        .sort-buttons { display: flex; gap: 10px; flex-wrap: wrap; }
+
+        .sort-btn {
+            background-color: var(--btn-gray); color: var(--text-main);
+            border: none; padding: 8px 15px; border-radius: 6px;
+            cursor: pointer; font-size: 14px; transition: 0.2s;
+        }
+
+        .sort-btn:hover { background-color: var(--btn-gray-hover); }
+        .sort-btn.active { background-color: var(--primary); color: white; }
+
+        .avg-rating {
+            font-weight: 600; font-size: 16px; color: var(--text-main);
+            display: flex; align-items: center; gap: 5px;
+        }
+        .avg-rating span { color: var(--star-active); font-size: 18px; }
+
+        .reviews-grid {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px;
+        }
+
+        .card {
+            background-color: var(--card-bg); border-radius: 12px; padding: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            transition: transform 0.2s, box-shadow 0.2s;
+            display: flex; flex-direction: column;
+        }
+        .card:hover { transform: translateY(-5px); box-shadow: 0 10px 15px rgba(0,0,0,0.1); }
+
+        .card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
+        .org-name { font-size: 18px; font-weight: 600; color: var(--text-main); }
+        .org-category { font-size: 12px; color: var(--text-muted); margin-bottom: 5px; }
+        .stars-display { color: var(--star-active); font-size: 18px; letter-spacing: 2px; }
+        
+        .review-text { font-size: 14px; color: var(--text-main); margin-bottom: 15px; flex: 1; }
+
+        .actions-bar { display: flex; gap: 10px; margin-bottom: 15px; }
+
+        /* Здесь вы можете изменить стили кнопок лайков/дизлайков */
+        .action-btn {
+            background: transparent; border: 1px solid var(--border-color);
+            color: var(--text-muted); padding: 5px 10px; border-radius: 6px;
+            cursor: pointer; font-size: 13px; display: flex; align-items: center; gap: 5px; transition: 0.2s;
+        }
+        .action-btn:hover { background-color: var(--bg-color); }
+        .action-btn.voted-up { color: #10B981; border-color: #10B981; background: rgba(16, 185, 129, 0.1); }
+        .action-btn.voted-down { color: #EF4444; border-color: #EF4444; background: rgba(239, 68, 68, 0.1); }
+
+        .card-footer {
+            display: flex; justify-content: space-between; align-items: center;
+            border-top: 1px solid var(--border-color); padding-top: 15px;
+            font-size: 12px; color: var(--text-muted);
+        }
+
+        /* Здесь вы можете изменить стили подвала сайта */
+        footer {
+            background-color: #1F2937; color: white; text-align: center;
+            padding: 30px 20px; margin-top: auto;
+        }
+
+        /* Стили модальных (всплывающих) окон */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.6); backdrop-filter: blur(4px);
+            display: none; justify-content: center; align-items: center;
+            z-index: 1000; opacity: 0; transition: opacity 0.3s ease;
+        }
+        .modal-overlay.show { display: flex; opacity: 1; }
+
+        .modal {
+            background: var(--card-bg); padding: 30px; border-radius: 12px;
+            width: 90%; max-width: 500px; transform: scale(0.9);
+            transition: transform 0.3s ease; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2);
+            color: var(--text-main);
+        }
+        .modal-overlay.show .modal { transform: scale(1); }
+        
+        .modal input, .modal textarea {
+            width: 100%; padding: 12px; margin-bottom: 15px;
+            border: 1px solid var(--border-color); border-radius: 8px;
+            outline: none; transition: 0.2s; font-size: 14px;
+            background-color: var(--input-bg); color: var(--text-main);
+        }
+        .modal input:focus, .modal textarea:focus {
+            border-color: var(--primary); box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+        }
+
+        .autocomplete-container { position: relative; }
+        .autocomplete-list {
+            position: absolute; top: 100%; left: 0; right: 0;
+            background: var(--card-bg); border: 1px solid var(--border-color);
+            border-radius: 8px; max-height: 200px; overflow-y: auto;
+            z-index: 1001; box-shadow: 0 4px 6px rgba(0,0,0,0.1); display: none; margin-top: -10px; margin-bottom: 15px;
+        }
+        .autocomplete-list div {
+            padding: 10px 12px; cursor: pointer; font-size: 14px;
+            border-bottom: 1px solid var(--border-color); color: var(--text-main);
+        }
+        .autocomplete-list div:hover { background-color: var(--bg-color); color: var(--primary); }
+
+        .rating-container { margin-bottom: 20px; display: flex; flex-direction: column; gap: 8px; }
+        .stars-interactive { display: flex; gap: 8px; cursor: pointer; }
+        .star {
+            font-size: 32px; color: var(--star-empty);
+            transition: color 0.15s ease, transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275); user-select: none;
+        }
+        .star.hover { color: var(--star-hover); transform: scale(1.1); }
+        .star.active { color: var(--star-active); }
+        .star.pop { animation: starPop 0.4s ease forwards; }
+        
+        @keyframes starPop {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.4); }
+            100% { transform: scale(1); }
+        }
+
+        .modal-buttons { display: flex; justify-content: flex-end; gap: 10px; }
+        .btn-cancel { background-color: var(--btn-gray); color: var(--text-main); }
+        .btn-cancel:hover { background-color: var(--btn-gray-hover); }
+
+        /* Адаптация под телефоны */
+        @media (max-width: 768px) {
+            .header-content { flex-direction: column; height: auto; padding: 15px 0; }
+            .search-bar { width: 100%; margin: 10px 0; }
+            .header-actions { width: 100%; justify-content: space-between; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="container header-content">
+            <!-- Здесь вы можете изменить логотип сайта -->
+            <a href="#" class="logo" id="headerLogo">Отзовик</a>
+            
+            <div class="search-bar">
+                <!-- Здесь вы можете изменить текст-подсказку в строке поиска -->
+                <input type="text" id="mainSearch" placeholder="Поиск по названиям или тексту отзыва...">
+                <button id="mainSearchBtn">Найти</button>
+            </div>
+
+            <div class="header-actions">
+                <button class="theme-toggle" id="themeToggleBtn">☀️</button>
+                <button class="btn" onclick="openModal()">Написать отзыв</button>
+            </div>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="container">
+            <!-- Здесь вы можете изменить текст главного баннера -->
+            <h1>Узнайте правду до покупки</h1>
+            <p>Читайте реальные отзывы клиентов и делитесь своим опытом</p>
+        </div>
+    </section>
+
+    <!-- Здесь вы можете изменить список категорий (значение data-search указывает, что будет искаться при клике) -->
+    <section class="categories container" id="categoryFilter">
+        <div class="category-tag" data-search="">🌐 Все</div>
+        <div class="category-tag" data-search="Рестораны">🍔 Рестораны</div>
+        <div class="category-tag" data-search="IT-Компании">💻 IT-Компании</div>
+        <div class="category-tag" data-search="Банки">🏦 Банки</div>
+        <div class="category-tag" data-search="Медицина">🏥 Медицина</div>
+        <div class="category-tag" data-search="Автосалоны">🚗 Автосалоны</div>
+        <div class="category-tag" data-search="Магазины">🛒 Магазины</div>
+    </section>
+
+    <main class="container reviews-section">
+        <div class="tools-bar">
+            <!-- Здесь вы можете изменить названия кнопок сортировки -->
+            <div class="sort-buttons">
+                <button class="sort-btn active" data-sort="new">Сначала новые</button>
+                <button class="sort-btn" data-sort="high">Сначала с высокой оценкой</button>
+                <button class="sort-btn" data-sort="low">Сначала с низкой оценкой</button>
+            </div>
+            <div class="avg-rating">Средний рейтинг: <span id="avgRatingValue">0.0</span> ★</div>
+        </div>
+        
+        <!-- Контейнер для отзывов (изначально пустой) -->
+        <div class="reviews-grid" id="reviewsContainer">
+            <!-- Отзывы будут добавляться сюда после публикации -->
+        </div>
+    </main>
+
+    <!-- Подвал сайта. Если удалить или изменить id элементов ниже - сайт перестанет работать! -->
+    <footer>
+        <p>© 2023 <span id="footerEasterEgg" style="user-select: none;">Отзовик</span>. Все права защищены.</p>
+    </footer>
+
+    <!-- Окно добавления отзыва -->
+    <div class="modal-overlay" id="reviewModal">
+        <div class="modal">
+            <!-- Здесь вы можете изменить заголовки и тексты в окне создания отзыва -->
+            <h2>Новый отзыв</h2>
+            <div class="autocomplete-container">
+                <input type="text" id="orgInput" placeholder="Название организации или банка" autocomplete="off">
+                <div class="autocomplete-list" id="autocompleteList"></div>
+            </div>
+            <div class="rating-container">
+                <label>Ваша оценка:</label>
+                <div class="stars-interactive" id="starRating">
+                    <div class="star" data-value="1">★</div>
+                    <div class="star" data-value="2">★</div>
+                    <div class="star" data-value="3">★</div>
+                    <div class="star" data-value="4">★</div>
+                    <div class="star" data-value="5">★</div>
+                </div>
+            </div>
+            <textarea id="textInput" rows="4" placeholder="Напишите ваш отзыв здесь..."></textarea>
+            <div class="modal-buttons">
+                <button class="btn btn-cancel" onclick="closeModal()">Отмена</button>
+                <button class="btn" onclick="submitReview()">Опубликовать</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Окно бета-теста. Если его удалить - сайт сломается. -->
+    <div class="modal-overlay" id="infoModal">
+        <div class="modal" style="text-align: center;">
+            <h2 style="margin-bottom: 15px;">Информация</h2>
+            <p style="margin-bottom: 20px;">Сайт в бета-тесте.<br>Сделано fgarto \ zeith</p>
+            <div class="modal-buttons" style="justify-content: center;">
+                <button class="btn" onclick="closeInfoModal()">Закрыть</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // СИСТЕМА ЗАЩИТЫ ОТ УДАЛЕНИЯ КОПИРАЙТА И БЕТА-ТЕСТА
+        // Если кто-то удалит эти элементы из HTML, сайт превратится в белый экран.
+        if (!document.getElementById('footerEasterEgg') || !document.getElementById('infoModal')) {
+            document.documentElement.innerHTML = '';
+            throw new Error("Критическая ошибка: нарушение целостности кода (удален обязательный элемент).");
+        }
+
+        // Логика переключения и сохранения темы
+        const themeBtn = document.getElementById('themeToggleBtn');
+        // Загружаем сохраненную тему из памяти браузера
+        let isDark = localStorage.getItem('theme') === 'dark';
+
+        // Применяем сохраненную тему сразу при загрузке страницы
+        if (isDark) {
+            document.body.classList.add('dark-mode');
+            themeBtn.innerText = '🌙';
+        } else {
+            themeBtn.innerText = '☀️';
+        }
+
+        themeBtn.addEventListener('click', () => {
+            isDark = !isDark;
+            document.body.classList.toggle('dark-mode', isDark);
+            themeBtn.innerText = isDark ? '🌙' : '☀️';
+            // Сохраняем выбор в память
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+        });
+
+        // Клик по логотипу
+        document.getElementById('headerLogo').addEventListener('click', (e) => {
+            e.preventDefault();
+            document.getElementById('mainSearch').value = '';
+            performSearch();
+        });
+
+        // Двойной клик для вызова бета-информации
+        document.getElementById('footerEasterEgg').addEventListener('dblclick', () => {
+            const m = document.getElementById('infoModal');
+            m.style.display = 'flex';
+            setTimeout(() => m.classList.add('show'), 10);
+        });
+
+        function closeInfoModal() {
+            const m = document.getElementById('infoModal');
+            m.classList.remove('show');
+            setTimeout(() => m.style.display = 'none', 300);
+        }
+
+        // Здесь вы можете изменить/пополнить базу данных банков
+        const banksList = [
+            "ПАО СБЕРБАНК", "БАНК ВТБ (ПАО)", "АО «АЛЬФА-БАНК»", "ПАО БАНК «ФК ОТКРЫТИЕ»", "АО «БАНК ДОМ.РФ»", 
+            "ПАО «ПРОМСВЯЗЬБАНК»", "БАНК ГПБ (АО)", "АО «РОССЕЛЬХОЗБАНК»", "ПАО РОСБАНК", "ПАО «МОСКОВСКИЙ КРЕДИТНЫЙ БАНК»", 
+            "ПАО «БАНК «САНКТ-ПЕТЕРБУРГ»", "ПАО «СОВКОМБАНК»", "ПАО «БАНК УРАЛСИБ»", "ПАО «АК БАРС» БАНК", "АО «Тинькофф Банк»"
+        ].sort();
+
+        const mainSearch = document.getElementById('mainSearch');
+        const mainSearchBtn = document.getElementById('mainSearchBtn');
+        const container = document.getElementById('reviewsContainer');
+
+        function updateAverageRating() {
+            const cards = Array.from(document.querySelectorAll('.card'));
+            const visibleCards = cards.filter(c => c.style.display !== 'none');
+            
+            if(visibleCards.length === 0) {
+                document.getElementById('avgRatingValue').innerText = '0.0';
+                return;
+            }
+
+            let total = 0;
+            visibleCards.forEach(c => total += parseInt(c.getAttribute('data-rating')));
+            const avg = (total / visibleCards.length).toFixed(1);
+            document.getElementById('avgRatingValue').innerText = avg;
+        }
+
+        function performSearch() {
+            const query = mainSearch.value.toLowerCase().trim();
+            Array.from(document.querySelectorAll('.card')).forEach(card => {
+                const text = card.innerText.toLowerCase();
+                card.style.display = text.includes(query) ? '' : 'none';
+            });
+            updateAverageRating();
+        }
+
+        mainSearch.addEventListener('input', performSearch);
+        mainSearchBtn.addEventListener('click', performSearch);
+        mainSearch.addEventListener('keypress', e => { if (e.key === 'Enter') performSearch(); });
+
+        document.querySelectorAll('.category-tag').forEach(tag => {
+            tag.addEventListener('click', function() {
+                mainSearch.value = this.getAttribute('data-search');
+                performSearch();
+            });
+        });
+
+        document.querySelectorAll('.sort-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.sort-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                
+                const sortType = this.getAttribute('data-sort');
+                const cards = Array.from(container.children);
+                
+                cards.sort((a, b) => {
+                    if (sortType === 'high') return b.getAttribute('data-rating') - a.getAttribute('data-rating');
+                    if (sortType === 'low') return a.getAttribute('data-rating') - b.getAttribute('data-rating');
+                    if (sortType === 'new') return b.getAttribute('data-time') - a.getAttribute('data-time');
+                });
+                
+                cards.forEach(card => container.appendChild(card));
+            });
+        });
+
+        container.addEventListener('click', function(e) {
+            const btn = e.target.closest('.action-btn');
+            if(!btn) return;
+            
+            const countSpan = btn.querySelector('.count');
+            let count = parseInt(countSpan.innerText);
+            
+            if(btn.classList.contains('voted-up') || btn.classList.contains('voted-down')) {
+                btn.classList.remove('voted-up', 'voted-down');
+                countSpan.innerText = count - 1;
+                return;
+            }
+
+            const isLike = btn.classList.contains('btn-like');
+            const sibling = isLike ? btn.nextElementSibling : btn.previousElementSibling;
+            
+            if(sibling.classList.contains('voted-up') || sibling.classList.contains('voted-down')) {
+                sibling.classList.remove('voted-up', 'voted-down');
+                const sibCount = sibling.querySelector('.count');
+                sibCount.innerText = parseInt(sibCount.innerText) - 1;
+            }
+
+            btn.classList.add(isLike ? 'voted-up' : 'voted-down');
+            countSpan.innerText = count + 1;
+        });
+
+        const modal = document.getElementById('reviewModal');
+        const orgInput = document.getElementById('orgInput');
+        const autocompleteList = document.getElementById('autocompleteList');
+        const stars = document.querySelectorAll('.star');
+        let currentRating = 0;
+
+        orgInput.addEventListener('input', function() {
+            const val = this.value;
+            autocompleteList.innerHTML = '';
+            if (!val) { autocompleteList.style.display = 'none'; return; }
+
+            let matches = 0;
+            banksList.forEach(bank => {
+                if (bank.toLowerCase().includes(val.toLowerCase()) && matches < 10) {
+                    matches++;
+                    autocompleteList.style.display = 'block';
+                    const div = document.createElement('div');
+                    const regex = new RegExp(`(${val})`, "gi");
+                    div.innerHTML = bank.replace(regex, "<strong>$1</strong>");
+                    div.addEventListener('click', () => {
+                        orgInput.value = bank;
+                        autocompleteList.innerHTML = '';
+                        autocompleteList.style.display = 'none';
+                    });
+                    autocompleteList.appendChild(div);
+                }
+            });
+            if (matches === 0) autocompleteList.style.display = 'none';
+        });
+
+        document.addEventListener('click', e => {
+            if (e.target !== orgInput) {
+                autocompleteList.innerHTML = '';
+                autocompleteList.style.display = 'none';
+            }
+        });
+
+        function openModal() {
+            modal.style.display = 'flex';
+            setTimeout(() => modal.classList.add('show'), 10);
+        }
+
+        function closeModal() {
+            modal.classList.remove('show');
+            setTimeout(() => {
+                modal.style.display = 'none';
+                orgInput.value = '';
+                document.getElementById('textInput').value = '';
+                currentRating = 0;
+                updateStarsState();
+            }, 300);
+        }
+
+        stars.forEach(star => {
+            star.addEventListener('mouseover', function() {
+                const val = parseInt(this.getAttribute('data-value'));
+                stars.forEach(s => s.classList.toggle('hover', parseInt(s.getAttribute('data-value')) <= val));
+            });
+            star.addEventListener('mouseout', () => stars.forEach(s => s.classList.remove('hover')));
+            star.addEventListener('click', function() {
+                currentRating = parseInt(this.getAttribute('data-value'));
+                stars.forEach(s => { s.classList.remove('pop'); void s.offsetWidth; });
+                stars.forEach(s => { if(parseInt(s.getAttribute('data-value')) <= currentRating) s.classList.add('pop'); });
+                updateStarsState();
+            });
+        });
+
+        function updateStarsState() {
+            stars.forEach(s => {
+                const val = parseInt(s.getAttribute('data-value'));
+                s.classList.toggle('active', val <= currentRating);
+                if(val > currentRating) s.classList.remove('pop');
+            });
+        }
+
+        function submitReview() {
+            const orgName = orgInput.value.trim();
+            const reviewText = document.getElementById('textInput').value.trim();
+            
+            // Здесь вы можете изменить текст ошибки при незаполненных полях
+            if(!orgName || !reviewText || currentRating === 0) {
+                alert("Пожалуйста, заполните все поля и поставьте оценку!");
+                return;
+            }
+
+            let starsStr = "★".repeat(currentRating) + "☆".repeat(5 - currentRating);
+            const date = new Date().toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' });
+            let category = banksList.includes(orgName) ? "Банки" : "Новое";
+            const timestamp = Date.now();
+
+            const newCard = document.createElement('div');
+            newCard.className = 'card';
+            newCard.setAttribute('data-rating', currentRating);
+            newCard.setAttribute('data-time', timestamp);
+            
+            newCard.innerHTML = `
+                <div class="card-header">
+                    <div>
+                        <div class="org-name">${orgName}</div>
+                        <div class="org-category">${category}</div>
+                    </div>
+                    <div class="stars-display">${starsStr}</div>
+                </div>
+                <div class="review-text">${reviewText}</div>
+                <div class="actions-bar">
+                    <button class="action-btn btn-like">👍 <span class="count">0</span></button>
+                    <button class="action-btn btn-dislike">👎 <span class="count">0</span></button>
+                </div>
+                <div class="card-footer">
+                    <span>Автор: Вы</span>
+                    <span>${date}</span>
+                </div>
+            `;
+
+            container.insertBefore(newCard, container.firstChild);
+            document.querySelector('[data-sort="new"]').click(); 
+            
+            mainSearch.value = '';
+            performSearch();
+            closeModal();
+        }
+
+        updateAverageRating();
+    </script>
+</body>
+</html>
